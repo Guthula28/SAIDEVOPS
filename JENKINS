@@ -500,4 +500,133 @@ pipeline {
         }
     }
 }
+========================================================================
+MASTER AND SLAVE:
+when we continously build jobs on jenkins ,it will get load and have the chance to crash.
+to avoid this load on jenkins we use salve servers to build the jobs
+
+
+slaves are our ec2-servers
+jenkins slaves are used to build the jobs
+master will commnicate with salve using ssh.
+here on slave agent should be installed (java-11)
+without java-11 our slaves will not work.
+slaves are platform independent.
+label: way of assigning work to particular slave.
+
+
+SETUP:
+CREATE AN EC2 INSTANCE AND INSTALL JAVA-11
+amazon-linux-extras install java-openjkd11 -y
+
+Dashboard -- > Manage Jenkins -- >Nodes -- > New node-- > name: salve1 -- > Permanent Agent -- > create 
+
+Number of executors	: 3 (number of paraller build we can do)
+Remote root directory   : /tmp (where your op is going to store)
+Labels			: name (way of assigning work to particular slave)
+Usage			: last opt
+Launch method		: last opt
+Host			: private-ip of slave
+Credentials		: add -- > jenkins -- > 
+kind: ssh username with privatekey
+Username: ec2-user
+Private Key: enter directtly -- > copy paste the pem content
+Host Key Verification Strategy: last opt
+
+If build fails check git and maven
+yum install git java-1.8.0-openjkd maven -y
+
+
+POST BUILD ACTIONS:
+Actions that are going to perform after build.
+
+ALWAYS: it will execute the post actions even if build is success or failed.
+SUCCESS: it will execute the post actions when build is success only.
+FAILURE: it will execute the post actions when build is failed only.
+
+
+
+ASSIGNMENT:
+create 3 jobs
+1. ci   : FREE STYLE 
+2. file : FREE STYLE
+3. CI   : PIPELINE
+if job-1 -- > job-2 -- > job-3 
+job-1 will not be run manual
+------ > 
+job-1: master 
+job-2: slave1
+job-3: slave2
+
+
+==========================================
+
+RBAC: ROLE BASED ACCESS CONTROL.
+
+to restrtic the users from perfoming all access.
+in real time we create roles to do this activity.
+
+1. create users
+Dashboard -- > Manage Jenkins -- > users -- > create user 
+create 2 users (dileep=anil)
+
+2. Download a plugin 
+Dashboard -- > Manage Jenkins -- > Plugins -- > Availabel Plugins
+Role-based Authorization Strategy -- > install -- > go back to top page
+
+Dashboard -- > Manage Jenkins -- > Security -- > Security -- > Authorization
+Role-based Strategy -- >save
+
+3. Manage and assign roles
+Dashboard -- > Manage Jenkins -- > Manage and Assign Roles -- > Manage Roles
+assign roles -- > add -- > attach roles
+
+
+=================================================
+
+pipeline {
+    agent any
+    
+    stages {
+        stage('checkout') {
+            steps {
+                git 'https://github.com/devopsbyraham/jenkins-java-project.git'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('artifact') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('nexus') {
+            steps {
+                nexusArtifactUploader artifacts: [[artifactId: 'NETFLIX', classifier: '', file: 'target/NETFLIX-1.2.2.war', type: '.war']], credentialsId: 'e7748fbc-175c-4b80-93b0-7b1bad293677', groupId: 'in.RAHAM', nexusUrl: '35.171.2.188:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'raham', version: '1.2.2'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                deploy adapters: [
+                    tomcat9(
+                        credentialsId: '43e10628-d76d-451d-afd0-a05c351388f2',
+                        path: '',
+                        url: 'http://54.146.228.245:8080/'
+                    )
+                ],
+                contextPath: 'netflix',
+                war: 'target/*.war'
+            }
+        }
+    }
+}
+
 
