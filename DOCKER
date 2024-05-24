@@ -1,0 +1,506 @@
+DOCKER:
+its a tool used to create containers.
+its a free and opensoure platfrom to create containers.
+its platfrom independent.
+docker runs on any os but natively supports linux distributions.
+it is used to containerize the application.
+language: GO LANG
+Year: 2013
+Who: Solomen Hykes and Sebastian Phal
+befor docker user faced lot of issues, after docker users are not facing the issues.
+
+
+DOCKER COMPONENTS:
+DOCKER CLIENT: it interacts with us (command -- > execute -- > output)
+DOCKER HOST: Where we install docker (Ec2, Laptop, Vm)
+DOCKER DAEMON: manages all docker components (Conatiners, Images, Volume)
+DOCKER REGISTRY: it manages all the docker images.
+
+INSTALLATION:
+yum install docker -y  (client)
+systemctl start docker (client, daemon)
+systemctl status docker
+docker version
+
+COMMANDS:
+docker images		: to show list of images
+docker pull ubutnu	: to get image ubuntu from dockerhub
+docker run -it --name cont1 ubuntu : to create container
+
+ls
+apt update -y
+apt install git maven tree apache2 -y
+check the version
+touch file{1..10}
+
+ctrl p q		: to exit from container
+docker search ubuntu	: to search images
+docker ps -a		: to list all containers
+docker ps 		: to list runnings containers
+docker stop cont1	: to stop the container
+docker start cont1	: to start the container
+docker kill cont1	: to stop the container
+docker start cont1	: to start the container
+docker pause cont1	: to pause the container
+docker unpause cont1	: to unpause the container
+docker attach cont1	: to go inside the container
+docker inspect cont1	: to get the complete info container
+docker rm cont1		: to get the complete info container
+
+
+STOP VS KILL :
+stop will stop all the processes before exiting the container
+kill wont stop all the processes before exiting the container
+
+HISTORY:
+
+    1  yum install docker -y
+    2  docker version
+    3  systemctl start docker
+    4  docker version
+    5  systemctl status docker
+    6  docker images
+    7  docker search ubuntu
+    8  docker pull ubuntu
+    9  docker images
+   10  docker run -it --name cont1 ubuntu
+   11  docker ps -a
+   12  docker ps
+   13  docker stop cont1
+   14  docker ps
+   15  docker ps -a
+   16  docker start cont1
+   17  docker ps
+   18  docker kill cont1
+   19  docker ps -a
+   20  docker start cont1
+   21  docker pause cont1
+   22  docker ps -a
+   23  docker unpause cont1
+   24  docker inspect cont1
+   25  docker rm cont1
+   26  docker kill cont1
+   27  docker rm cont1
+   28  docker ps -a
+   29  docker images
+   30  docker run -it --name cont1 ubuntu
+   31  docker ps -a
+   32  docker attach cont1
+   33  docker stop cont1
+   34  docker ps -a
+   35  docker start cont1
+   36  docker ps -a
+   37  docker pause cont1
+   38  docker ps -a
+   39  docker unpause cont1
+   40  docker ps -a
+   41  docker insect cont1
+   42  docker inspect cont1
+   43  docker kill cont1
+   44  docker rm cont1
+   45  docker images
+   46  history
+
+========================================================================================
+
+
+OS LEVEL OF VIRTUALIZATION:
+
+docker pull ubuntu
+docker run -it --name cont1 ubuntu 
+apt update -y
+apt install apache2 maven mysql-server -y
+touch file1
+mvn -v
+apache2 -v
+mysql --version
+ls
+
+ctrl pq
+
+docker commit cont1 raham:v1 : to create image from container
+docker run -it --name cont2 raham:v1
+
+
+Dockerfile:
+it is used to automate image creation.
+we write the Dockerfile we can reuse it.
+inside Dockerfile we use components to do our works.
+Components will be on Capital Letter.
+in Dockerfile D will be capital.
+to create image from file we need to build it.
+
+FROM		: to get the Base image for conatiner.
+RUN		: to execute linux commands(image creation)
+CMD		: to execute linux commands(container creation)
+ENTRYPOINT	: high priority than CMD
+COPY		: it will copy local files to conatiner.
+ADD		: it will copy internet files to conatiner.
+WORKDIR		: to go specific folder inside container
+LABEL		: used to attach labels for image
+EXPOSE		: used to allocate port number
+ENV		: can pass variables during container runtime (inside)
+ARGS		: can pass variables during build-time (outside)
+
+EX-0:
+
+FROM ubuntu
+RUN apt update
+RUN apt install apache2 -y
+RUN apt install python3 -y
+RUN apt install mysql-server -y
+
+docker build -t raham .
+docker run -it --name cont0 raham
+
+
+EX-1:
+
+vim Dockerfile
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install apache2 -y
+CMD apt install maven -y
+
+docker build -t raham:v1 .
+docker run -it --name cont1 raham:v1
+
+
+EX-2:
+
+FROM ubuntu
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.84/bin/apache-tomcat-9.0.84.tar.gz /tmp
+
+docker build -t raham:v2 .
+docker run -it --name cont2 raham:v2
+
+EX-3:
+
+FROM ubuntu
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.83/bin/apache-tomcat-9.0.83.tar.gz /tmp
+WORKDIR /tmp
+LABEL author rahamshaik
+
+
+docker build -t raham:v3 .
+docker run -it --name cont3 raham:v3
+
+
+EX-4:
+
+FROM ubuntu
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.83/bin/apache-tomcat-9.0.83.tar.gz /tmp
+WORKDIR /tmp
+LABEL author rahamshaik
+EXPOSE 8080
+ENV client swiggy
+ENV env PROD
+
+docker build -t raham:v4 .
+docker run -it --name cont4 raham:v4
+docker inspect cont4
+
+docker ps -aq  : to print container ids
+docker kill $(docker ps -aq)  : to kill all container 
+docker rm $(docker ps -aq)    : to delete all container 
+
+BASIC DEPLOY:
+
+vim Dockerfile
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install apache2 -y
+COPY index.html /var/www/html
+CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+
+docker build -t devopsbyraham:v1 .
+docker run -itd --name cont10 -p 81:80 devopsbyraham:v1
+
+LINK FORN INDEX.HTML: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_form_icon
+
+HISTORY:
+    1  yum install docker -y
+    2  systemctl start docker
+    3  docker pull ubuntu
+    4  docker run -it --name cont1 ubuntu
+    5  docker ps -a
+    6  docker commit cont1 raham1
+    7  docker images
+    8  dockwer run -it --name cont2 raham1
+    9  docker run -it --name cont2 raham1
+   10  docker ps -a
+   11  docker stop cont1 cont2
+   12  docker rm cont1 cont2
+   13  docker ps -a
+   14  docker rmi -f rahamv1
+   15  docker rmi -f raham1
+   16  docker images
+   17  vim Dockerfile
+   18  docker build -t raham:v1 .
+   19  docker images
+   20  cat Dockerfile
+   21  docker run -it --name cont1 raham:v1
+   22  vim Dockerfile
+   23  docker build -t raham:v1 .
+   24  docker kill cont1
+   25  docker rm cont1
+   26  docker run -it --name cont1 raham:v1
+   27  vim index.htnlk
+   28  mv index.htnlk index.html
+   29  ll
+   30  vim Dockerfile
+   31  docker build -t raham:v2 .
+   32  docker run -it --name cont2 raham:v2
+   33  docker inspect cont2
+   34  docker inspect cont2 | grep -i label
+   35  docker inspect cont2 | grep -i author
+   36  docker ps -a
+   37  vim Dockerfile
+   38  docker build -t raham:v3 .
+   39  docker run -it --name cont3 raham:v3
+   40  docker ps -a
+   41  docker stats
+   42  docker info
+   43  vim index.html
+   44  vim Dockerfile
+   45  docker build -t raham:v5 .
+   46  docker run -itd --name cont5 -p 80:80 raham:v5
+   47  docker run -itd --name cont6 -p 81:80 raham:v5
+   48  history
+
+DAY-03:
+VOLUMES:
+It is used to store data inside container.
+volume is a simple directory inside container.
+containers uses host resources (cpu, ram, rom).
+single volume can be shared to multiple containers.
+ex: cont-1 (vol1)  --- > cont2 (vol1) & cont3 (vol1) & cont4 (vol1)
+at a time we can share single volume to single container only.
+every volume will store under /var/lib/docker/volumes
+volumes and container both are loosely coupled. 
+
+
+METHOD-1:
+DOCKER FILE:
+
+FROM ubuntu
+VOLUME ["/volume1"]
+
+docker build -t raham:v1 .
+docker run -it --name cont1 raham:v1
+cd volume1/
+touch file{1..5}
+cat>file1
+ctrl p q
+
+docker run -it --name cont2 --volumes-from cont1 --privileged=true  ubuntu
+cd volume1/
+touch file{6..10}
+ctrl p q
+
+now same files will go to cont-1 because both containers are using same volumes.
+
+
+METHOD-2:
+FROM CLI:
+
+docker run -it --name cont3 -v volume2 ubuntu
+cd volume2/
+touch java{1..5}
+ctrl p q
+
+docker run -it --name cont4 --volumes-from cont3 --privileged=true ubuntu
+cd volume2/
+ls
+touch java{6..10}
+ctrl p q
+
+docker attach cont3
+ls
+
+
+METHOD-3: VOLUME MOUNTING
+
+docker volume ls 		: to list volumes
+docker volume create name	: to create volume
+docker volume inspect volume3	: to get info of volume3
+cd /var/lib/docker/volumes/volume3/_data 
+touch python{1..5}
+docker run -it --name cont5 --mount source=volume3,destination=/volume3 ubuntu
+docker volume rm 	: to delete volumes
+docker volume prune	: to delete unused volumes
+
+copying the files from container to local -- > use cp comamnd form volume path
+
+HOST -- > CONTAINER:
+
+cd /root
+touch raham{1..5}
+docker volume inspect volume4
+cp * /var/lib/docker/volumes/volume4/_data
+docker attach cont5 
+ls /volume4
+
+docker run -it --name con6 -v /root/:/raham ubuntu 
+
+DOCKER SYSTEM COMMANDS:
+used to know complete info about the docker elements
+
+docker system df : to give info of docker objects
+docker system df -v
+docker inspect cont4 | grep volume -i
+docker inspect cont5 | grep volume -i
+docker system prune : to remove unused objects of docker
+
+DOCKER MEMORY MANAGEMENT:
+conatiners uses our host resources (cpu, mem)
+by default we dont have any limits for containers
+these containers can use all of our cpu and memory without limitation.
+we need to set it
+docker run -it --name cont7 --memory="200mb" --cpus="0.2" ubuntu
+docker inspect cont3
+docker stats
+
+TO INCREASE THE VALUES:
+docker update --cpus="0.2" --memory="200mb" cont7
+
+HISTORY:
+    1  yum install docker -y
+    2  systemctl start docker
+    3  vim Dockerfile
+    4  docker build -t raham:v1 .
+    5  docker run -it --name cont1 raham:v1
+    6  docker run -it --name cont2 --volumes-from cont1 ubuntu
+    7  ll /var/lib/docker/volumes/
+    8  ll /var/lib/docker/volumes/c6251d61cec15eda48614d35373c5d7ad4ff1532831a623b765ede0c0b8cd427/
+    9  ll /var/lib/docker/volumes/c6251d61cec15eda48614d35373c5d7ad4ff1532831a623b765ede0c0b8cd427/_data/
+   10  docker attach cont2
+   11  docker attach cont1
+   12  docker run -it --name cont3 -v /volume2 ubuntu
+   13  docker run -it --name cont4 --volumes-from cont3 ubuntu
+   14  ll /var/lib/docker/volumes/
+   15  docker attach cont4
+   16  docker attach cont3
+   17  dockr volume ls
+   18  docker volume ls
+   19  docker volume create volume3
+   20  docker volume ls
+   21  docker volume inspect volume3
+   22  docker volume delete volume3
+   23  docker volume rm volume3
+   24  docker volume ls
+   25  docker volume create volume3
+   26  docker volume inspect volume3
+   27  cd /var/lib/docker/volumes/volume3/_data
+   28  touch python{1..5}
+   29  ls
+   30  docker run -it --name cont5 --mount source=volume3,destination=/abc ubuntu
+   31  ll
+   32  cd
+   33  ll
+   34  touch index.html
+   35  ll
+   36  cp * /var/lib/docker/volumes/volume3/_data/
+   37  docker attach cont5
+   38  ll
+   39  docker run -it --name cont6 -v /root/:/host ubuntu
+   40  docker system
+   41  docker system df
+   42  docker system df -v
+   43  docker inspect cont4 | grep volume -i
+   44  docker inspect cont5 | grep volume -i
+   45  docker volume rm volume3
+   46  cd /
+   47  ls
+   48  cd
+   49  docker run -it --name cont7 --memory="100mb" --cpus="0.2" ubuntu
+   50  docker stats
+   51  docker inspect cont7
+   52  docker update --cpus="0.4" --memory="400mb" cont7
+   53  docker update --cpus="0.4" --memory="50mb" cont7
+   54  docker inspect cont7
+   55  history
+
+DOCKER SWARM:
+it is a high avalibilty method to make our application run efficiently.
+cluster = group of servers
+
+we can run same comtainer on multiple servers.
+docker swarm manger is going to distribute conatiners to workernodes.
+docker engine is responsible for creating cluster.
+inside cluster we create services.
+in swarm cluster conatiners are self-healed.
+
+SETUP: 
+CREATE 3 SERVERS (1=MANAGER, 2=WORKER)
+sudo -i
+hostnamectl set-hostname manager/worker-1/worker-2
+sudo -i
+
+yum install docker -y
+systemctl start docker
+systemctl status docker
+
+DOCKER MANAGER NODE:
+docker swarm init 
+copy token to worker nodes
+docker node ls
+
+
+SERVICES:
+to copy the container to worker nodes we need to create services.
+service -- > container -- > app
+service is a way of exposing app.
+we can manage multiple conatiners with help of services.
+
+docker service create --name train --repliacs 6 -p 81:80 vinodvanama/paytmtrain:latest
+docker service ls
+docker service scale movies=10
+docker service ps movies
+docker service scale movies=4
+docker service inspect movies
+docker service rollback movies
+docker service logs movies
+
+TO DETACH NODE FROM CLUSTER:
+go to worker node
+docker swarm leave
+if you want to add again: copy the token again
+
+TO REMOVE THE WORKR NODE COMPLETELY:
+docker node rm id(node) -- > run this on manager
+
+docker swarm join-token manager : to retive the token of manager
+
+
+DOCKER NETWORK:
+Docker networks are used to make a communication between the multiple containers that are running on same or different docker hosts. We have different types of docker networks.
+Bridge Network
+Host Network
+None network
+Overlay network
+
+BRIDGE NETWORK: It is a default network that container will communicate with each other within the same host.
+
+HOST NETWORK: When you Want your container IP and ec2 instance IP same then you use host network
+
+NONE NETWORK: When you don’t Want The container to get exposed to the world, we use none network. It will not provide any network to our container.
+
+OVERLAY NETWORK: Used to communicate containers with each other across the multiple docker hosts.
+
+Note: stop before remove
+
+COMMANDS:
+docker network create paytm
+docker network ls
+docker network inspect paytm
+docker network connect paytm cont1
+docker network connect paytm cont2
+docker exec cont1 sudo apt update -y
+docker exec cont1 sudo apt install iputils-ping -y
+docker exec cont1 ping ip-cont2
