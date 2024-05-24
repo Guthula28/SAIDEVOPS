@@ -1,0 +1,150 @@
+MAVEN:
+Its a free and opensource tool by Apache Software Foundation.
+its platfrom indepenedent.
+its a project management tool or build tool.
+it will build our code and converts into artifact.
+Build: its a process of adding dependency for our code.
+dependencies: libraries and packages of our code.
+maven is build by using java programming.
+java version: 1.8.0
+year: 2004 
+Home path: .m2
+Alternatives: ant, gradle, makefile, npm ---
+Depends on programming language build tool will change.
+
+POM.XML: PROJECT OBJECT MODEL [XML: EXTENSIBLE MARKUP LANGUAGE]
+it is used to store infromation of our project.
+ex: Name, Artifact, Tools, Snapshot, dependencies, libs ------
+its the main file for maven and project.
+for a single project we have only one pom.xml
+multiple projects cant use same pom.xml
+Note: it should be on project folder.
+
+MAVEN LIFECYCLE:
+GOALS: its a command used to execute task.
+PLUGINS: its a small software.
+
+mvn compile	: to compile the code
+mvn test	: to unit test the code
+mvn package	: to convert artifact
+mvn install	: to copy artifact from local to maven home path
+mvn clean	: to delete targets
+mvn clean package: to perform end to end
+ 
+
+SETUP:
+CREATE AN EC2 INSTANCE AND CONNECT TO IT
+yum install git java-1.8.0-openjdk maven tree -y
+git -v
+mvn -v [note: java must be 1.8.0]
+
+git clone https://github.com/devopsbyraham/jenkins-java-project.git
+cd jenkins-java-project
+mvn compile
+mvn test
+mvn package
+mvn install
+mvn clean	
+mvn clean package
+
+BUILD TOOLS:
+C, C++	: MAKE FILE
+.NET	: VS CODE
+JAVA	: MAVEN, ANT, GRADLE
+PYTHON	: GRADLE, MAVEN 
+NODE	: NPM
+PHP	: NMAKE
+
+PROBLEMS WITHOUT MAVEN:
+1. CANT CREATE ARTIFACTS
+2. CANT DO DEPLOY
+3. CANT CREATE PROJECT STRUCTURE
+
+MAVEN VS ANT:
+MAVEN IS BUILD & PROJECT MANAGEMENT TOOL, BUT ANT IS ONLY BUILD TOOL
+MAVEN HAS POM.XML, ANT HAS BUILD.XML
+MAVEN USE PLUGINS, ANT USE SCRIPTS
+MAVEN PLUGINS ARE REUSEABLE, ANT SCRIPTS ARE NOT REUSEABLE
+MAVEN IS DECLARATIVE, ANT IS PRODCDEURAL.
+
+HISTORY:
+
+    1  yum install git java-1.8.0-openjdk maven -y
+    2  git -v
+    3  mvn -v
+    4  git clone https://github.com/devopsbyraham/jenkins-java-project.git
+    5  ll
+    6  cd jenkins-java-project/
+    7  ll
+    8  yum install tree -y
+    9  tree
+   10  ll
+   11  mvn compile
+   12  ll
+   13  tree
+   14  mvn test
+   15  tree
+   16  mvn package
+   17  pwd
+   18  ll target/
+   19  mvn install
+   20  ll /root/.m2/repository/in/RAHAM/NETFLIX/1.2.2/
+   21  ll
+   22  mvn clean
+   23  ll
+   24  mvn clean package
+   25  ll
+   26  lll target/
+   27  ll target/
+   28  ll /root/.m2/repository/in/RAHAM/NETFLIX/1.2.2/
+   29  mvn clean
+   30  ll
+   31  ll /root/.m2/repository/in/RAHAM/NETFLIX/1.2.2/
+   32  mvn clean package
+   33  tree
+   34  LL
+   35  ll
+   36  history
+
+======================================================================
+
+29-03-2024 : INTRO, HISTORY, SETUP, CI PROCESS, CUSTOM WORKSPACE
+
+CI/CD -- > PROCESS
+
+CI: CONTINOUS  INTEGRATION
+CONTINOUS BUILD + CONTINOUS TEST (OLD CODE WITH NEW CODE)
+DAY-1: 100 : BUILD + TEST
+DAY-2: 200 : BUILD + TEST
+DAY-3: 300 : BUILD + TEST
+
+BEFORE CI:
+TIME WASTE
+MANUAL PROCESS
+
+AFTER CI:
+TIME SAVE
+AUTOMATED
+
+CD: CONTINOUS DELIVERY/CONTINOUS DEPLOYMENT
+
+ENV:
+DEV	: DEVELOPERS
+QA	: TESTERS
+UAT	: CLIENT
+
+ABOVE ENVS ARE PRE-PROD OR NON-PROD
+
+PROD	: USERS
+
+PROD IS ALSO CALLED AS LIVE
+
+CONTINOUS DELIVERY: PROCESS OF DEPLOYMENT APP TO PROD IS MANUAL
+CONTINOUS DEPLOYMENT: PROCESS OF DEPLOYMENT APP TO PROD IS AUTOMATIC
+
+PIPELINE:
+STEP BY STEP PROCESS OF EXECUTING A TASK.
+SERIES OF EVENTS INTERLINED WITH EACH OTHER.
+
+WAKEUP-- > DAILY ROUTINES-- > BREAKFAST -- > LUNCH -- > CLASS
+CODE -- > BUILD -- > TEST -- > ARTIFACT -- > DEPLOY 
