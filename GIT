@@ -1,0 +1,348 @@
+DAY-01: GIT : INTRO, HISTORY, STAGES, SOME BASIC COMMANDS
+
+APPLICATION   : COLLECTION OF SERVICES
+EX: WHATS APP, FB, IG 
+
+CREATE : CODE 
+DEPLOYMENT: PROCESS OF INSTALLING APP TO SERVER
+
+GIT: GLOBAL INFORMATION TRACKER
+VCS: TO KEEP SOURCE CODE SEPERATELY FOR EVERY VERSION
+
+ROLLBACK: GOING BACK TO PREVIOUS VERSION
+EX: V2 --> V1
+
+INDEX.HTML: BASIC FILE TO CREATE ANY APP.
+
+V1  : INDEX.HTML : 10
+V2  : INDEX.HTML : 10 + 10 = 20
+V3  : INDEX.HTML : 20 + 10 = 30
+
+
+CVCS: SOURCE CODE WILL BE ON SINGLE REPO.
+EX: SVN
+
+DVCS: SOURCE CODE WILL BE ON MULTIPLE REPO.
+EX: GIT
+
+
+STAGES:
+WORKING DIRECTORY: where we write our source code.
+STAGING AREA: where we track our source code. 
+REPOSITORY: where we store our tracked source code.
+
+local repo: .git {note: without .git commands will not work}
+
+INSTALLATION:
+yum install git -y  [yum: pkg manager, install: action, git: pkg name, -y: yes]
+git init	: to install .git repo
+
+touch index.html 	: to create a file
+git status		: to show status of file
+git add index.html	: to track the file
+git commit -m "msg" index.html: to commit a file
+git log			: to show commits
+git log	--oneline	: to show commits in single line
+git log	--oneline -2	: to show last 2 commits in single line
+git show commit_id	: to show files of a particular commit
+
+CTC			: CREATE TRACK COMMIT
+
+red color	: working directory
+green color	: statging area
+no file 	: repository
+
+
+
+===========================================================
+
+BRANCH:
+its an individual line of development.
+initially developers will create a branch and work on it.
+at the end all developers will push the branches to github.
+Realtime: master, main, dev, feature, qa, release, hotfix, ------------
+By default the branch in git is Master.
+
+git branch		: to list branches
+git branch branch_name	: to create a new branch
+git checkout branch_name: to switch to a branch
+
+
+PROCESS:
+touch index.html
+git add index.html
+git config user.name "raham"
+git config user.email "raham@gmail.com"
+git commit -m "commit-1" index.html
+git branch movies
+git checkout movies
+touch movies{1..5}
+git add *
+git commit -m "dev-1" *
+git branch train
+git checkout train
+touch train{1..5}
+git add *
+git commit -m "dev-2" *
+git checkout -b recharge
+touch recharge{1..5}
+git add *
+git commit -m "dev-3" *
+git checkout master
+git checkout -b dth
+touch dth{1..5}
+git add *
+git commit -m "dev-4" *
+
+
+GITHUB: its a remote repo which is hosted on internet.
+all the local files will move from local repo to github.
+because if the files are in remote repo we can access from anywhere.
+if files are deleted on local we can retrive it from github.
+
+create a github account and create a repo inside it
+
+git remote add origin https://github.com/devopsbyraham/paytm.git
+git push origin master
+username:
+password:
+
+git push origin movies
+username:
+password:
+
+git push origin train
+username:
+password:
+
+git push origin recharge
+username:
+password:
+
+git push origin dth
+username:
+password:
+
+
+DAY-03: 25-03-2024
+
+GIT CLONE:
+used to download the repo from github to local.
+For public repo we dont need token, but for private repo we need to use token.
+
+git clone https://github.com/chandusekhar10/paytm.git
+
+GIT FORK:
+used to copy the from one github to another github.
+
+GIT MERGE: used to add the files from one branch to another
+git checkout master
+git merge movies
+git merge train
+
+GIT REBASE: used to add the files from one branch to another
+git checkout master
+git merge recharge
+git merge dth
+
+MERGE VS REBASE:
+Merge will store history & Rebase will not store
+Merge will show files & Rebase will not show
+
+GIT REVERT: to undo merging
+git revert branch_name 
+
+GIT RESTORE: used to restore deleted files/branches
+rm -f file1
+git status
+git restore file1
+
+used to untrack the tracked files also
+touch file1
+git add file1
+git status 
+git restore --staged file1
+git status 
+
+
+BRANCH COMMANDS:
+git branch -m old_name new_name	: to rename a branch
+git branch -D branch_name	: to delete a branch
+
+GIT STASH: to hide the files
+file -- > u dont want to commit -- > temp hide 
+file should be added but not commmited
+
+touch file2
+git add 
+git stash	: to stash the file
+git stash apply	: to unstash the file
+git stash list	: to list the stashes
+git stash pop	: to delete the last stash
+git stash clear	: to delete all the stashes
+
+=======================================================
+
+GIT PULL:
+used to get changes from github to git
+if we have a file on github but not on git
+so we can get that file by git pull
+
+git pull origin branch_name
+
+GIT FETCH: 
+used to show changes from github to git
+
+
+MERGE CONFLICT:
+when we merge 2 diffrent branches with same file and different code conflcits will occur.
+how to resolve: manually
+
+
+CHERRY-PICK:
+it will merge the specific files from one branch to another
+we use commit id to merge the files.
+git cherry-pick commit_id
+
+.gitignore: its a file used to ignore files under status show.
+
+HISTORY:
+
+    1  yum install git -y
+    2   mkdir raham
+    3  cd raham/
+    4  git init
+    5  vim file1
+    6  git add file1
+    7  git commit -m "commit-1" file1
+    8  git branch
+    9  git branch -m master branch1
+   10  git branch
+   11  git checkout -b branch2
+   12  vim file1
+   13  git add  file1
+   14  git commit -m "commit-2" file1
+   15  git branch
+   16  cat file1
+   17  git checkout branch1
+   18  cat file1
+   19  vim file1
+   20  git add  file1
+   21  git commit -m "commit-3" file1
+   22  git merge branch2
+   23  vim file1
+   24  git add file1
+   25  git commit -m "commit-4"
+   26  cat file1
+   27  git branch
+   28  ll
+   29  git checkout branch2
+   30  ll
+   31  cd
+   32  mkdir abcd
+   33  cd abcd/
+   34  touch index.html
+   35  git add index.html
+   36  git int
+   37  git init
+   38  git add index.html
+   39  git commit -m "raham" index.html
+   40  git branch
+   41  ll
+   42  git checkout -b branch2
+   43  touch java{1..3}
+   44  git add java*
+   45  git commit -m "java commits" java*
+   46  touch python{1..3}
+   47  git add python*
+   48  git commit -m "python commits" python*
+   49  git log
+   50  touch go{1..3}
+   51  git add go*
+   52  git commit -m "go commits" go*
+   53  git log --oneline
+   54  git checkout master
+   55  ll
+   56  git cherry-pick c696650
+   57  ll
+   58  git cherry-pick d8eb184
+   59  ll
+   60  git cherry-pick 7f4d506
+   61  ll
+   62  cd
+   63  ll
+   64  rm -rf *
+   65  git clone https://github.com/RAHAMSHAIK007/02-08-2023.git
+   66  cd 02-08-2023/
+   67  git pull origin master
+   68* git bran
+   69  git pull origin main
+   70  vim 8.\ PROMETHEUS
+   71  cat -n 8.\ PROMETHEUS
+   72  git pull origin main
+   73  cat -n 8.\ PROMETHEUS
+   74  git pull origin main
+   75  rm -rf 8.\ PROMETHEUS
+   76  ll
+   77  git pull origin main
+   78  git pull
+   79  ll
+   80  git status
+   81  git restore 8. PROMETHEUS
+   82  git restore 8.PROMETHEUS
+   83  touch abcd
+   84  git add abcd
+   85  rm -rf abcd
+   86  git status
+   87  git restore abcd
+   88  ll
+   89  git pull origin main
+   90  ll
+   91  git fetch
+   92  cat 8.\ PROMETHEUS
+   93  ll
+   94  touch file{1..10}
+   95  git status
+   96  vim .gitignore
+   97  git status
+   98  vim .gitignore
+   99  git status
+  100  ll
+  101  git status
+  102  vim file
+  103  vim .gitignore
+  104  git status
+  105  ll
+  106  rm -rf .gitignore
+  107  git add file*
+  108  git stash
+  109  ll
+  110  history
+
+==================================================================
+
+CHICKEN   --- >  CLEAN  --- > INGREDIENTS -- >  MARNET  --- >   BIRYANI  = CLIENT
+(RAW)                                                           (END)                                                                                                   
+
+.JAVA    ---- >   COMPILE   - -- >  TEST  -->  ARTIFACT  -- > APP = CLIENT
+(RAW)                                                        (END)
+                                                                                                     
+Artifact: its the final product of our code.
+we deploy artifacts in servers.
+Artifacts consist of code.
+
+TYPES:
+1. JAR		: JAVA ARCHIVE	: BACKEND CODE
+2. WAR		: WEB ARCHIVE	: FRONTEND CODE + BACKEND CODE
+3. EAR		: ENTERPISE ARCHIVE : WAR + JAR
+
+PATH OF WAR: tomcat/webapps 
+PATH OF JAR: tomcat/libs 
+
+.java -- > compile -- > .class -- > .jar (store jars on lib folder)
+
+.java = raw code
+.class = executabel file
+.jar = group of .class files
+
+.java + html, css, js = pack = .war (custom path)
