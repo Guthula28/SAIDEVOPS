@@ -1,0 +1,60 @@
+PROMETHEUS:
+
+Prometheus is an open-source monitoring system that is especially well-suited for cloud-native environments, like Kubernetes. 
+It can monitor the performance of your applications and services.
+it will sends an alert you if there are any issues. 
+It has a powerful query language that allows you to analyze the data.
+ It pulls the real-time metrics, compresses and stores  in a time-series database.
+Prometheus is a standalone system, but it can also be used in conjunction with other tools like Alertmanager to send alerts based on the data it collects.
+it can be integration with tools like PagerDuty to send alerts to the appropriate on-call personnel.
+ it collects, and it also has a rich set of integrations with other tools and systems.
+For example, you can use Prometheus to monitor the health of your Kubernetes cluster, and use its integration with Grafana to visualize the data it collects.
+
+
+SYNOPSIS:
+its a opensource monitoring tool.
+it collects metrics of server and store on time series database.
+we use PROMQL to exctract the data.
+we can integrate prometheus with other tools also.
+it will send alerts to notify to team.
+
+
+COMPONENTS:
+Prometheus is a monitoring system that consists of the following components:
+
+A main server that scrapes and stores time series data
+A query language called PromQL is used to retrieve and analyze the data
+A set of exporters that are used to collect metrics from various systems and applications
+A set of alerting rules that can trigger notifications based on the data
+An alert manager that handles the routing and suppression of alerts
+
+
+
+GRAFANA:
+
+Grafana is an open-source data visualization and monitoring platform that allows you to create dashboards to visualize your data and metrics. 
+It is a popular choice for visualizing time series data, and it integrates with a wide range of data sources, including Prometheus, Elasticsearch, and InfluxDB.
+A user-friendly interface that allows you to create and customize dashboards with panels that display your data in a variety of formats, including graphs, gauges, and tables. You can also use Grafana to set up alerts that trigger notifications when certain conditions are met.
+Grafana has a rich ecosystem of plugins and integrations that extend its functionality. For example, you can use Grafana to integrate with other tools and services, such as Slack or PagerDuty, to receive alerts and notifications.
+
+GRAFANA WILL PROVIDE DASHBOARD WHICH CANT BE GIVEN BY PROMETHEUS
+
+
+PUBLIC-IP: 3000
+username: admin & password: admin 
+
+ADD DATA SOURCE -- > PROMETHEUS -- > URL : (http://localhost:9090) -- > SAVE & TEST -- > back
+CLICK ON HOME SYMBOL -- > DASHBOARDS -- > ADD PANEL -- > TYPE: UP -- > APPLY
+CLICK ON HOME SYMBOL -- > DASHBOARDS -- > IMPORT
+We can create our own dashboards and panels with customized queries, but it is a tedious task. 
+So to make our work simple there are already dashboards created by other users. 
+We can use the same and tweak the expressions based on our desire. 
+
+1860
+10180
+14731
+
+amazon-linux-extras install epel -y
+yum install stress -y
+
+=======================================================================================
