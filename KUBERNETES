@@ -787,4 +787,819 @@ spec:
         image: rahamshaik/moviespaytm:latest
         ports:
         - containerPort: 80
+QUOTAS:
+k8s cluster can be divied into namespaces
+By default the pod in K8s will run with no limitations of Memory and CPU
+But we need to give the limit for the Pod 
+It can limit the objects that can be created in a namespace and total amount of resources.
+when we create a pod scheduler will the limits of node to deploy pod on it.
+here we can set limits to CPU, Memory and Storage
+here CPU is measured on cores and memory in bytes.
+1 cpu = 1000 millicpus  ( half cpu = 500 millicpus (or) 0.5 cpu)
+
+Here Request means how many we want
+Limit means how many we can create maximum
+
+limit can be given to pods as well as nodes
+the default limit is 0
+
+if you mention request and  limit then everything is fine
+if you dont mention request and mention limit then Request=Limit
+if you mention request and not mention limit then Request=!Limit
+
+IMPORTANT:
+Ever Pod in namespace must have CPU limts.
+The amount of CPU used by all pods inside namespace must not exceed specified limit.
+
+DEFAULT RANGE:
+CPU : 
+MIN		= REQUEST = 0.5
+MAX		= LIMIT = 1
+
+MEMORY :
+MIN	= REQUEST = 500M
+MAX	= LIMIT = 1G
+
+
+kubectl create ns dev
+kubectl config set-context $(kubectl config current-context) --namespace=dev
+
+vim dev-quota.yml
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-quota
+  namespace: dev
+spec:
+  hard:
+    pods: "5"
+    limits.cpu: "1"
+    limits.memory: 1Gi
+
+kubectl create -f dev-quota.yml
+kubectl get quota
+
+
+EX-1: Mentioning Limits  = SAFE WAY
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movies
+  labels:
+    app: movies
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movies
+  template:
+    metadata:
+      labels:
+        app: movies
+    spec:
+      containers:
+        - name: cont1
+          image: yashuyadav6339/movies:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+
+kubectl create -f dep.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movies
+  labels:
+    app: movies
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movies
+  template:
+    metadata:
+      labels:
+        app: movies
+    spec:
+      containers:
+        - name: cont1
+          image: yashuyadav6339/movies:latest
+          resources:
+            limits:
+              cpu: "0.2"
+              memory: 100Mi
+
+kubectl create -f dep.yml
+
+
+
+EX-2: MENTION LIMITS & REQUESTS = SAFE WAY
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movies
+  labels:
+    app: movies
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movies
+  template:
+    metadata:
+      labels:
+        app: movies
+    spec:
+      containers:
+        - name: cont1
+          image: yashuyadav6339/movies:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.2"
+              memory: 100Mi
+
+EX-3: MENTION only REQUESTS =  NOT SAFE WAY
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movies
+  labels:
+    app: movies
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movies
+  template:
+    metadata:
+      labels:
+        app: movies
+    spec:
+      containers:
+        - name: cont1
+          image: yashuyadav6339/movies:latest
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 100Mi
+
+===================================================================================================================
+
+RBAC:
+
+role : set of permissions for one ns
+role binding: adding users to role
+these will work on single namespace
+
+cluster role: set of permissions for entire ns
+cluster role binding: adding users to cluster role
+these will work on all namespaces
+
+
+when we run kubectl get po k8s api server will authenticate and check authorization
+authentication: permission to login
+authorization: permission to work on resources
+
+To authenticate API requests, k8s uses the following options: 
+client certificates, 
+bearer tokens, 
+authenticating proxy, 
+or HTTP basic auth.
+
+Kubernetes doesn’t have an API for creating users. 
+Though, it can authenticate and authorize users.
+
+We will choose the client certificates as it is the simplest among the four options.
+
+why certs needed on k8s: for authentication purpose.
+certs will have users & keys for login. 
+
+1. Create a client certificate
+We’ll be creating a key and certificate sign request (CSR) needed to create the certificate. Let’s create a directory where to save the certificates. I’ll call it cert:
+
+mkdir dev1 && cd dev1
+
+1. Generate a key using OpenSSL: 
+openssl genrsa -out dev1.key 2048
+
+2. Generate a Client Sign Request (CSR) : 
+
+openssl req -new -key dev1.key -out dev1.csr -subj "/CN=dev1/O=group1"
+ls ~/.minikube/ 
+
+3. Generate the certificate (CRT): 
+
+openssl x509 -req -in dev1.csr -CA ~/.minikube/ca.crt -CAkey ~/.minikube/ca.key -CAcreateserial -out dev1.crt -days 500
+
+Now, that we have the .key and the .crt, we can create a user.
+
+
+
+Create a user
+1. Set a user entry in kubeconfig
+kubectl config set-credentials dev1 --client-certificate=dev1.crt --client-key=dev1.key
+
+2.Set a context entry in kubeconfig
+kubectl config set-context dev1-context --cluster=minikube --user=dev1
+kubectl config view
+
+3.Switching to the created user
+kubectl config use-context dev1-context
+$ kubectl config current-context # check the current context
+dev1-context
+But, now, dev1 doesn’t have any access privileges to the cluster. For that we’ll have access denied if we try to create any resource:
+
+$ kubectl create namespace ns-test
+Error from server (Forbidden): namespaces is forbidden: User "dev1" cannot create resource "namespaces" in API group "" at the cluster scope
+3. Grant access to the user
+To give access to manage k8s resources to dev1, we need to create a Role and a BindingRole.
+
+kubectl config use-context minikube
+kubectl create ns dev
+
+
+
+3.1. Create a Role
+
+Let’s create a Role object in role.yaml file. The Role will define which resources could be accessed and which operations/verbs could be used.
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: dev
+  name: pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+
+Resources: pod, deployment, namespace, secret, configmap, service, persistentvolume…
+
+Verbs: get, list, watch, create, delete, update, edit, exec.
+
+3.2. Create a BindingRole
+
+We want to match the dev1 to the role created above named : pod-reader. To do that, we need to use RoleBinding.
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: dev
+subjects:
+- kind: User
+  name: dev1 # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: pod-reader # must match the name of the Role
+  apiGroup: rbac.authorization.k8s.io
+
+Deploy both the role.yaml and role-binding.yaml to k8s, and don’t forget to use the context of minikube:
+
+kubectl config set-context --current --namespace=dev
+
+$ kubectl config use-context minikube
+Switched to context "minikube".
+$ kubectl apply -f role.yaml
+role.rbac.authorization.k8s.io/pod-reader created
+$ kubectl apply -f role-binding.yaml
+rolebinding.rbac.authorization.k8s.io/read-pods created
+We check that the Role and BindingRole was created successfully:
+
+$ kubectl get roles
+NAME       AGE
+pod-reader 2m
+$ kubectl get rolebindings
+NAME        AGE
+read-pods   2m
+
+We used Role to scope the rules to only one namespace, but we can also use ClusterRole to define more than one namespace. RoleBinding is used to bind to Role and ClusterRoleBinding is used to bind to ClusterRole.
+
+4. Testing the allowed operations for user
+Switch again to dev1 and try one of the non allowed operations like to create a namespace. This will fail, because dev1 is not allowed to do so.
+
+$ kubectl config use-context dev1-context
+$ kubectl create namespace ns-test 
+$ kubectl get pods 
+
+NOTE: TO GIVE PERMISSION FOR ROLE SWITCH TO MINIKUBE CONTEXT
+TO CHECK THE GIVEN PERMISSION FOR ROLE SWITCH TO dev1 CONTEXT
+
+
+
+EXAMPLES:
+EX-1:
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: ["*"] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+
+
+EX-2:
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: ["*"] # "" indicates the core API group
+  resources: ["pods", "deployments"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+
+EX-3:
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: ["*"] # "" indicates the core API group
+  resources: ["pods", "deployments", "pods/log"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+
+
+ADMIN:
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: admin
+rules:
+- apiGroups: ["*"] # "" indicates the core API group
+  resources: ["*"]
+  verbs: ["*"]
+
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: adminbind
+  namespace: default
+subjects:
+- kind: User
+  name: user2 # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: admin # must match the name of the Role
+  apiGroup: rbac.authorization.k8s.io
+
+
+kubectl create deploy raham --image nginx
+kubectl create cm one --from-literal=app=paytm
+kubectl create ns test
+kubectl logs pod1
+
+======================================================================
+
+VOLUMES:
+
+Basically these K8's will works on short living data. So lets unveil the power of volumes like EmptyDir, HostPath, PV & PVC.
+
+The data is a very important thing for an application. In K8's, data is kept for a short time in the applications in the pods/containers. By default the data will no longer available. To overcome this we will use Kubernetes Volumes.
+
+But before going into the types of Volumes. Let’s understand some facts about pods and containers' short live data.
+
+
+Types of volumes:
+ EmptyDir
+ HostPath
+ Persistent Volume
+ Persistent Volume Claim(PVC)
+
+
+EMPTY DIR:
+This volume is used to share the data between multiple containers within a pod instead of the host machine or any Master/Worker Node.
+EmptyDir volume is created when the pod is created and it exists as long as a pod.
+There is no data available in the EmptyDir volume type when it is created for the first.
+Containers within the pod can access the other containers' data. However, the mount path can be different for each container.
+If the Containers get crashed then, the data will still persist and can be accessible by other or newly created containers.
+
+
+HOSTPATH:
+This volume type is the advanced version of the previous volume type EmptyDir.
+In EmptyDir, the data is stored in the volumes that reside inside the Pods only where the host machine doesn’t have the data of the pods and containers.
+hostpath volume type helps to access the data of the pods or container volumes from the host machine.
+hostpath replicates the data of the volumes on the host machine and if you make the changes from the host machine then the changes will be reflected to the pods volumes(if attached).
+
+
+PV:
+Persistent means always available.
+Persistent Volume is an advanced version of EmptyDir and hostPath volume types.
+Persistent Volume does not store the data over the local server. It stores the data on the cloud or some other place where the data is highly available.
+In previous volume types, if pods get deleted then the data will be deleted as well. But with the help of Persistent Volume, the data can be shared with other pods or other worker node’s pods as well after the deletion of pods.
+PVs are independent of the pod lifecycle, which means they can exist even if no pod is using them.
+With the help of Persistent Volume, the data will be stored on a central location such as EBS, Azure Disks, etc.
+One Persistent Volume is distributed across the entire Kubernetes Cluster. So that, any node or any node’s pod can access the data from the volume accordingly.
+In K8S, a PV is a piece of storage in the cluster that has been provisioned by an administrator.
+If you want to use Persistent Volume, then you have to claim that volume with the help of the manifest YAML file.
+When a pod requests storage via a PVC, K8S will search for a suitable PV to satisfy the request. 
+If a PV is found that matches the request, the PV is bound to the PVC and the pod can use the storage. 
+If no suitable PV is found, K8S then PVC will remain unbound (pending).
+
+
+PVC:
+To get the Persistent Volume, you have to claim the volume with the help of PVC.
+When you create a PVC, Kubernetes finds the suitable PV to bind them together.
+After a successful bound to the pod, you can mount it as a volume.
+Once a user finishes its work, then the attached volume gets released and will be used for recycling such as new pod creation for future usage.
+If the pod is terminating due to some issue, the PV will be released but as you know the new pod will be created quickly then the same PV will be attached to the newly created Pod.
+After bounding is done to pod you can mount it as a volume. The pod specifies the amount and type of storage it needs, and the cluster provisions a persistent volume that matches the request. If its not matches then it will be in pending state. 
+
+
+EBS:
+Now, As you know the Persistent Volume will be on Cloud. So, there are some facts and terms and conditions are there for EBS because we are using AWS cloud for our K8 learning. So, let’s discuss it as well:
+
+EBS Volumes keeps the data forever where the emptydir volume did not. If the pods get deleted then, the data will still exist in the EBS volume.
+The nodes on which running pods must be on AWS Cloud only(EC2 Instances).
+Both(EBS Volume & EC2 Instances) must be in the same region and availability zone.
+EBS only supports a single EC2 instance mounting a volume
+
+
+
+CODES:
+
+
+
+cat pv.yml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: example-pv
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  awsElasticBlockStore:
+    volumeID: vol-07b55f3d3b90c5fa7
+    fsType: ext4
+
+
+PVC.YML
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+DEP.YML
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pvdeploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     app: swiggy
+  template:
+    metadata:
+      labels:
+        app: swiggy
+    spec:
+      containers:
+      - name: raham
+        image: centos
+        command: ["bin/bash", "-c", "sleep 10000"]
+        volumeMounts:
+        - name: example-pv
+          mountPath: "/tmp/persistent"
+      volumes:
+        - name: example-pv
+          persistentVolumeClaim:
+            claimName: example-pvc
+
+TROUBESHOOT:
+
+There are several pod-level issues that can occur in Kubernetes (K8s). Here are some common pod-level issues and their possible causes:
+
+CreateContainerConfigError
+ImagePullBackOff or ErrorImagePull
+CrashLoopBackOff
+
+CONFTAINER CONFIG ERROR:
+This error is usually the result of a missing Secret or ConfigMap. Secrets are Kubernetes objects used to store sensitive information like database credentials. 
+ConfigMaps store data as key-value pairs, and are typically used to hold configuration information used by multiple pods.
+
+kubectl create deploy raham2 --image=mariadb
+kubectl get po - o wide
+raham2   0/1     Error              3 (37s ago)   73s     10.244.0.9   minikube <none> <none>
+you will get error after some time 
+kubectl describe pod raham2-66c4648c74-hn45t
+now you will gte exit code as one  : that means some issue will be there
+kubectl logs raham2-66c4648c74-hn45t
+kubectl set env deploy raham2 MARIADB_ROOT_PASSWORD=raham123
+kubectl get po - o wide
+Now it will run
+
+ImagePullBackOff or ErrorImagePull:
+
+RESON:
+Image availability
+Image registry authentication
+Image registry connectivity  (Firewall rules or network restrictions of Cluster)
+Image registry permissions
+Image pull rate limits
+Network connectivity and DNS resolution 
+Proxy configurations
+Resource constraints
+
+kubectl run pod1 --image rahamshaik007/paytm movies:latest
+kubectl run pod2 --image rahamshaik007/paytmmovies:latest
+
+==============================================================================================
+Probes are a Kubernetes feature that allows you to determine the health and readiness of a container running inside a pod. 
+
+Kubernetes provides three types of probes:
+Readiness Probe
+Liveness Probe
+StartUp Probe
+
+Liveness Probe:
+It allows you to check the health of a running container in a pod. 
+It is used to ensure that the container is running as expected and to restart the container if it becomes unresponsive.
+LivenessProbe works by periodically sending a request to a specified endpoint in the container and checking the response. 
+If the response indicates that the container is healthy, it continues to run. 
+If the response indicates that the container is unhealthy, Kubernetes will restart the container.
+
+There are three types of probes that can be used for liveness checks: HTTP GET, TCP socket, and command execution. 
+HTTP GET probes send an HTTP request to a specific endpoint on the container, 
+TCP socket probes attempt to open a socket to a specific port on the container, 
+and command execution probes execute a command inside the container and check its output.
+
+LivenessProbe is an important feature for ensuring that your application is always running and available to users. 
+By configuring it properly, you can avoid downtime caused by unresponsive containers and ensure that your users have a consistent experience with your application.
+
+
+
+FailureThreshold: 
+specifies the number of times a probe must fail before the kubelet considers the container to have failed.
+
+initialDelaySeconds: 
+it is set to 30 sec the kubelet will wait for 30 seconds after the container starts before performing the first liveness probe. 
+
+periodSeconds:
+if the periodSeconds of a liveness probe is set to 10, the kubelet will perform a  probe every 10 seconds to check the health of the container.
+
+SuccessThreshold:
+For example, if the success threshold of a readiness probe is set to 3, the kubelet will perform a readiness probe every period seconds and if the probe succeeds three times in a row, it will consider the container to be ready to receive traffic
+
+timeoutSeconds:
+used to specify the number of seconds the kubelet should wait for a probe to complete before considering it as failed.
+For example, if the timeoutSeconds of a liveness probe is set to 5 and the probe takes longer than 5 seconds to complete, the kubelet.
+
+LIVENESS PROBE:
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: registry.k8s.io/busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30
+    livenessProbe:
+      exec:
+        command:
+        - ls /tmp
+      initialDelaySeconds: 5
+      periodSeconds: 5
+
+READYNESS PROBE:
+
+
+It checks whether a container is ready to serve traffic. 
+It is used to ensure that the container has started up successfully and is ready to receive traffic before it is added to the load balancer pool.
+it works by periodically sending a request to a specified endpoint in the container and checking the response. 
+If the response indicates that the container is ready to receive traffic, it is added to the load balancer pool. 
+If the response indicates that the container is not ready to receive traffic, it is not added to the load balancer pool until it becomes ready.
+Like LivenessProbe, there are three types of probes that can be used for readiness checks: HTTP GET, TCP socket, and command execution. 
+
+HTTP GET probes send an HTTP request to a specific endpoint on the container, 
+TCP socket probes attempt to open a socket to a specific port on the container, 
+and command execution probes execute a command inside the container and check its output.
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: raham-ready
+spec:
+  containers:
+  - name: cont1
+    image: nginx
+    command:
+      - sleep
+      - "3600"
+    readinessProbe:
+      periodSeconds: 10
+      exec:
+        command:
+        - cat
+        - /root/app.yml
+    resources: {}
+
+kubectl apply -f abc.yml
+kubectl get po
+
+here container will be on running but ready will get 0
+kubectl describe pod raham-ready
+Readiness probe failed: cat: /root/app.yml: No such file or directory
+
+kubectl exec -it raham-ready -- touch /root/app.yml
+kubectl get po
+
+now it will come on running state 
+
+Readiness Probes: Used to check if the application is ready to use and serve the traffic
+Liveness Probes: Used to check if the container is available and alive.
+Startup Probes: Used to takes some time to initialize application 
+
+readiness probe will check something and liveness probe will monitor what readiness probe is checking.
+
+EX: I will create a file in root folder in a pod, then i will tell to Readiness proceed furthur if you have the file only 
+The Liveness probe will check the readniness probe is working or not
+if its not running liveness probe will stop.
+
+
+========================================================================================
+
+ENV VARS:
+
+It is a way to pass configuration information to containers running within pods. 
+To set Env  vars it include the env or envFrom field in the configuration file.
+
+ENV: To pass variables directly
+ENVFROM:
+allows you to set environment variables for a container by referencing either a ConfigMap or a Secret. 
+When you use envFrom, all the key-value pairs in the referenced ConfigMap or Secret are set as environment variables for the container. 
+You can also specify a common prefix string
+
+
+DEFINING LEVELS:
+Container level:  It will be applied to specific container.
+Pod level:  It will be applied to all the containers within the pod.
+Deployment level: It will be applied to all the pods created by that deployment. This is useful when you want to provide configuration settings that are shared across multiple instances of the same application.
+
+SETTING ENV VARS:
+Inside the Pod or Container spec
+Using ConfigMaps
+Using Secrets
+
+
+CONFIG MAPS:
+It is used to store the data in key-value pair, files, or command-line arguments that can be used by pods, containers and other resources in cluster
+But the data should be non confidential data ()
+Here we can set the configuration of data of application seperately
+It decouple environment specific configuration.
+But it does not provider security and encryption.
+If we want to provide encryption use secrets in kubernetes.
+Limit of config map data in only 1 MB (we cannot store more than that)
+But if we want to store a large amount of data in config maps we have to mount a volume or use a seperate database or file service.
+
+USE CASES IN CONFIG MAPS:
+Configure application settings: By using this config maps, we can store the configuration data that helps to run our application like database connections and environment variables
+Configuring a pod or container: It is used to send a configuration data to a pod or container at runtime like CLI or files.
+Sharing configuration data across multiple resources: By using this configuration data multiple resources can access, such as a common configuration file for different pods or services.
+We can store the data: By using this config maps, we can store the data like IP address, URL's and DNS etc...
+
+
+
+CONFIG MAP FROM  FILE:
+
+cat configmap.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+data:
+  database-url: "http://localhost:5432"
+  redis: "http://localhost:6379"
+
+cat pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+    - image: hpakala53/paytmtrain:latest
+      name: cont1
+      envFrom:
+        - configMapRef:
+            name: my-config
+
+CONFIG MAP FROM CLI:
+
+kubectl create cm newconfig1 --from-literal=user=raham
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web1
+spec:
+  containers:
+    - name: web
+      image: nginx
+      env:
+      - name: USER
+        valueFrom:
+          configMapKeyRef:
+            name: newconfig1
+            key: user
+
+kubectl get cm 
+kubectl get cm newconfig1 -o yaml
+kubectl apply -f pod.yaml
+kubectl exec -it static-web1 -- bash
+echo $USER
+
+
+SECRETS:
+To store sensitive data in an unencrypted format like passwords, ssh-keys etc ---
+it uses base64 encoded format
+Designed to prevent exposure or unauthorized access to sensitive information within the cluster.
+Both secrets and Config maps are used outside of deployment
+config maps cannot encode but secrets will encode the data
+password=raham (now we can encode and ecode the value)
+
+WHY: 
+if i dont want to expose the sensitive info so we use SECRETS
+By default k8s will create some Secrets these are useful from me to create communicate inside the cluster
+used to communicate with one resoure to another in cluster
+These are system created secrets, we need not to delete
+
+TYPES OF SECRETS:
+K8s supports different types of secrets:
+Generic: Generic secrets allow you to store arbitrary key-value pairs.
+TLS: To store TLS certificates for securing communication between services.
+Docker-registry: Docker-registry secrets are used for storing credentials required to authenticate with private Docker registries.
+SSH: To store SSH private keys, used for secure access to external resources.
+
+
+
+kubectl get secret
+kubectl create secrets -A
+kubectl create secrets generic -h
+kubectl create secret generic password --from-literal=ROOT_PASSWORD=raham123
+kubectl get secrets
+kubectl get secrets password -o yaml
+password is encoded so we are now decoding it to get the original info
+echo "cmFoYW0xMjM=" | base64 --decode
+echo "cmFoYW0xMjM=" | base64 -d
+it can only encode and decode data but it cannot encrypt the data if you want encrypt the data we need to use
+ansible vault or terraform vault etc ---
+Best thing is we never expose directly
+in real time we cannot give secrets access to all persons 
+we can give it specific people by using RBAC or Service accounts
+
+
+kubectl create deploy newdb --image=mariadb
+kubectl get pods
+kubectl logs newdb-58b55d5ddd-24pgv
+kubectl set env deploy newdb --from=secret/password
+kubectl get po  #it will fail now  
+kubectl describe pod newdb-58b55d5ddd-24pgv
+if i dont give prefix it will go to crashloop backoff
+kubectl set env deploy newdb --from=secret/password --prefix=MYSQL_
+ kubectl edit deploy newdb
+you can see ROOT_PASSWORD it doesn't have any value we can ignore that as well
+if you delete it(ROOT_PASSWORD) can create a new pod immediately
+kubectl exec -it newdb-85f447554f-wgfvs -- env
+
+================================================================================
 
