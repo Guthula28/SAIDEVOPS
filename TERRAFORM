@@ -471,7 +471,6 @@ resource "aws_instance" "three" {
 subnet_id = aws_subnet.two.id
   ami           = "ami-0f7b55661ecbbe44c"
   instance_type = "t2.micro"
-  key_name      = "TTERRAFORM"
   tags = {
     Name = "${local.env}-server"
   }
