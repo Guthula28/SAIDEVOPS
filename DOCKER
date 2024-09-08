@@ -1,3 +1,45 @@
+
+MONOLITHIC: SINGLE APP -- > SINGLE SERVER -- > SINGLE DB
+MICRO SERVICES: SINGLE APP -- > MULTIPLE SERVERS -- > MULTIPLE DB
+
+WHICH ONE IS BEST:
+Depends on application.
+
+FACTORS:
+1. MAINTAINANCE
+2. COST
+3. RESPONSE
+4. COMPLEXITY
+
+LIMITATION:
+1. MAINTAINACE
+2. COST
+
+MONOLITHIC = SERVERS  = NOT FREE
+MICROSERVICES = CONTAINERS = FREE
+
+CONTAINERS:
+containers are similar to server.
+we can create, run and deploy the apps.
+containers will not have any os by default.
+images will give os for conatainers.
+Without image we cant create containers.
+these are light weighted components.
+
+[SERVER = AMI, CONTAINER = IMAGES]
+
+IMAGE:
+it will have os which req to run our container.
+os -- > pkgs -- > deploy
+
+
+containerization: Process of packing application with its dependencies.
+EX: PUBG 
+BEFORE CONTAINARIZATION: [APP=PLAYSTORE MAPS=INTERNET]
+AFTER CONTAINARIZATION: [APP(MAPS) = PLAYSTORE]
+
+CAKE=BAKERY & KINFE=STORE
+SWIGGY= CAKE & KNIFE
 DOCKER:
 its a tool used to create containers.
 its a free and opensoure platfrom to create containers.
