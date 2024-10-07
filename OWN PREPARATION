@@ -1,1 +1,15 @@
+Introduction : 
 
+Hi my name is saiteja and i have 4 years of experience as a devops engineer and i have experience of working with various devops tools like git,jenkins,docker,
+kubernetes,terraform and ansible. 
+I have experience in writing jenkins file for cicd automation that includes automation stuff from build to deployment
+I Have experience of docker files to create docker images and doing containization of application and then deploying them into kubernetes cluster 
+I have experience of writing manifest files for applications that are required for deploying applications in kunebrnets cluster.
+
+Major part of my work is into Monitoring  running applications in kubernetes cluster and making sure that they are continuosly up and running in cluster and ensuring high availability of applications for the clientes who are accessing it 
+This is what i have been into my experience as a Devops Engineer.
+
+What is CI/CD or explain the process of CI/CD
+CICD is the process of doing automation from point where developers push their code to the remote repo to the point where we deploy application into kubernetes cluster
+It first starts with cloning the code from remote repo to jenkins worksspace.
+and then doing build out of the code written by the developers using some build tools like maven,gradle or any other tool...
