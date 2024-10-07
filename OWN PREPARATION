@@ -2,9 +2,9 @@ Introduction :
 
 Hi my name is saiteja and i have 4 years of experience as a devops engineer and i have experience of working with various devops tools like git,jenkins,docker,
 kubernetes,terraform and ansible. 
-I have experience in writing jenkins file for cicd automation that includes automation stuff from build to deployment
-I Have experience of docker files to create docker images and doing containization of application and then deploying them into kubernetes cluster 
-I have experience of writing manifest files for applications that are required for deploying applications in kunebrnets cluster.
+I have experience in writing jenkins file for cicd automation that includes automation stuff from BUILD to DEPLOYMENT
+I Have experience of Writing docker files to create docker images and doing containerization of application and then deploying them into kubernetes cluster 
+I do write various manifest files that are required for deploying applications in kunebrnets cluster.
 
 Major part of my work is into Monitoring  running applications in kubernetes cluster and making sure that they are continuosly up and running in cluster and ensuring high availability of applications for the clientes who are accessing it 
 This is what i have been into my experience as a Devops Engineer.
