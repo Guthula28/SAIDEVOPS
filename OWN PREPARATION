@@ -13,3 +13,7 @@ What is CI/CD or explain the process of CI/CD
 CICD is the process of doing automation from point where developers push their code to the remote repo to the point where we deploy application into kubernetes cluster
 It first starts with cloning the code from remote repo to jenkins worksspace.
 and then doing build out of the code written by the developers using some build tools like maven,gradle or any other tool...
+and then pushing the build artifact into any remote repo like jfrog or nexus and then doing vulnerability check,code coverage analysis,code smells,duplications 
+everything like that using tools like SONARQUBE,JACACO,QUALITYGATES etc...
+and if the published report is more than the specified value proceeding to the next step of creating docker image using docker plugin and deploying that kubernetes
+cluster using kubernetes plugin and then doing health check of the running application if it is 200 or not and then notifying whether the build is success or not 
