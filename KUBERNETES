@@ -53,9 +53,11 @@ MASTER:
 
 WORKER:
 
-1. KUBELET : its an agent (it will inform all activites to master)
-2. KUBEPROXY: it deals with nlw (ip, networks, ports,load balancing ,proxy)
-3. POD: group of conatiners (inside pod we have app)
+1. KUBELET : its an agent   (it will inform all activites to master)
+2. KUBEPROXY: it deals with nlw that manages entire networking of worker node (ip, networks, ports,load balancing ,proxy)
+3. CONTAINER RUNTIME (Manages and monitors the state of containers)
+4. POD: group of conatiners (inside pod we have app)
+
 
 Note: all components of a cluster will be created as a pod.
 
