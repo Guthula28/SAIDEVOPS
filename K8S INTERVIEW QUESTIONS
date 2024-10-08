@@ -69,6 +69,9 @@ load balancer
 148. Difference blw ReplicaSet and ReplicationController ?
 149. MAX NODES: 5000, MAX PODS: 1,50,000 MAX PODS PER NODE: 110 ?
 150. What is pv and pvc in kubernetes ?
+persistent volumes are storage resources provisioned by an adminstrator in the cluster
+Persistent volume claims are requests for storage made by users
+
 151. What is metric server in kubernetes ?
 What is difference between deployment and demand set and replica set versus replication control.
 
