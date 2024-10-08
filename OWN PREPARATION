@@ -7,7 +7,8 @@ I have experience in writing jenkins file for cicd automation that includes auto
 I Have experience of Writing docker files to create docker images and doing containerization of application and then deploying them into kubernetes cluster 
 I do write various manifest files that are required for deploying applications in kunebrnets cluster.
 
-Major part of my work is into Monitoring  running applications in kubernetes cluster and making sure that they are continuosly up and running in cluster and ensuring high availability of applications for the clientes who are accessing it 
+Major part of my work is into Monitoring  running applications in kubernetes cluster and making sure that they are continuosly up and running in cluster and 
+ensuring high availability of applications for the clientes who are accessing it 
 This is what i have been into my experience as a Devops Engineer.
 
 What is CI/CD or explain the process of CI/CD
@@ -21,6 +22,10 @@ cluster using kubernetes plugin and then doing health check of the running appli
 
 what is devops ?
 
-DevOps is a set of practices that combines software development (Dev) and IT operations (Ops) to improve collaboration, communication, and efficiency in delivering software products and services. It is a cultural and organizational shift that promotes collaboration, automation, and continuous improvement across development and operations teams.
+DevOps is a set of practices that combines software development (Dev) and IT operations (Ops) to improve collaboration, communication, and efficiency in delivering 
+software products and services. It is a cultural and organizational shift that promotes collaboration, automation, and continuous improvement across development 
+and operations teams.
 
-The main goal of DevOps is to break down the traditional barriers between development and operations and create a more seamless and streamlined software delivery process. It aims to bring developers, system administrators, quality assurance engineers, and other stakeholders together to work collaboratively throughout the entire software development lifecycle.
+The main goal of DevOps is to break down the traditional barriers between development and operations and create a more seamless and streamlined software
+delivery process. It aims to bring developers, system administrators, quality assurance engineers, and other stakeholders together to work collaboratively 
+throughout the entire software development lifecycle.
