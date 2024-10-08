@@ -9,6 +9,10 @@ combination of master and slave is known as kubernates cluster and individual ma
 127. Difference blw Docker Swarm & Kubernetes ?
 
 128. Explain Kubernetes Architecture ?
+
+Kubernetes follows a master-worker acrhitechture 
+The master node is responsible for managing the cluster, while the worker nodes are responsible for running the applications. 
+The key components include the API Server,etcd,scheduler,control manager,kubelet and kubeproxy
 129. Explain master node and worker node components in Kubernetes ?
 130. What is Kubectl ?
 
@@ -17,6 +21,8 @@ deployments, services, and more.
 
 131. How many types of Kubernetes cluster we have ?
 132. What is a Pod in Kubernetes ?
+
+Pod is the smaller deployable unit in kubernetes,Representing one or more container that shares same network and storage context.
 
  This is the smallest object that kubernetes works on with in a pod we have a container so pod is generally named as layer of encapsulation on top container.
 kubernates cannot directly work on containers instead it works on pods it is the responsibility for the pod to communicate with container and perform 
@@ -47,6 +53,12 @@ In Kubernetes namespace is a logical isolation of resources.Network,policies,RBA
 one project can use ns1 and other project can use ns2 with out any overlap and authentication problems.
 
 140. What are types of services in k8s ?
+
+There are three different types of services in k8s
+cluster ip
+node port
+load balancer
+
 141. differnece blw ClusterIp vs NodePort vs LoadBalancer ?
 142. What is scaling and what is HPA in K8s ?
 143. What is a metric server in k8s ?
