@@ -1,1 +1,55 @@
+126. What is Kubernetes ?
+
+Kubernates is a container orchestration tool like docker swarm intially created by google later it was made open source. 
+Using kuberntes we can handle all the production related challenges like load balancing,scalling,rolling updates,failover scenarios etc.
+the main machine where kubernetes is configured is called as "master". this controlled by an application called "kubeadm".
+the node which takes the indtruction from master are called as "slave" and they use application called "kubeapi"
+combination of master and slave is known as kubernates cluster and individual machines in this cluster are called as "nodes or minions"
+
+127. Difference blw Docker Swarm & Kubernetes ?
+128. Explain Kubernetes Architecture ?
+129. Explain master node and worker node components in Kubernetes ?
+130. What is Kubectl ?
+
+kubectl is a command-line tool used to interact with Kubernetes clusters. It provides a way to manage and control various Kubernetes resources, such as pods, 
+deployments, services, and more.
+
+131. How many types of Kubernetes cluster we have ?
+132. What is a Pod in Kubernetes ?
+
+ This is the smallest object that kubernetes works on with in a pod we have a container so pod is generally named as layer of encapsulation on top container.
+kubernates cannot directly work on containers instead it works on pods it is the responsibility for the pod to communicate with container and perform 
+the desire activity
+
+133. what is minikube and what are the requirments for setup ?
+134. In Kubernetes how many ways we can create resources ?
+134. what is ReplicaSet in Kubernetes ?
+
+This is the high level kubernetes object which is the capable of deploying multiple replicas of pods and it can also be used for scalling.
+
+135. what is Deploymenr in Kubernetes 
+
+This is also high level kubernetes object which can be used for creating multiple replicas of pods, it can be used for scalling  and also performing
+rolling updates.
+
+
+136. what is Difference blw ReplicaSet & Deployment in Kubernetes ?
+137. what is Rollout in Kubernetes ?
+139. what is Namespaces in Kubernetes & why we need to use it ?
+140. What are types of services in k8s ?
+141. differnece blw ClusterIp vs NodePort vs LoadBalancer ?
+142. What is scaling and what is HPA in K8s ?
+143. What is a metric server in k8s ?
+144. How you get metrics of nodes and pods ?
+145. Difference blw HPA VS VPA ?
+146. what is DaemonSet ?
+147. Difference blw Deployment and DaemonSet ?
+148. Difference blw ReplicaSet and ReplicationController ?
+149. MAX NODES: 5000, MAX PODS: 1,50,000 MAX PODS PER NODE: 110 ?
+150. What is pv and pvc in kubernetes ?
+151. What is metric server in kubernetes ?
+What is difference between deployment and demand set and replica set versus replication control.
+
+What is resource quotas in kubernetes it is and what is rbac ?
+what is helmschart and why we need to use it ?
 
