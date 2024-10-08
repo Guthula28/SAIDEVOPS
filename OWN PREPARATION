@@ -1,5 +1,6 @@
 Introduction : 
 
+
 Hi my name is saiteja and i have 4 years of experience as a devops engineer and i have experience of working with various devops tools like git,jenkins,docker,
 kubernetes,terraform and ansible. 
 I have experience in writing jenkins file for cicd automation that includes automation stuff from BUILD to DEPLOYMENT
@@ -17,3 +18,9 @@ and then pushing the build artifact into any remote repo like jfrog or nexus and
 everything like that using tools like SONARQUBE,JACACO,QUALITYGATES etc...
 and if the published report is more than the specified value proceeding to the next step of creating docker image using docker plugin and deploying that kubernetes
 cluster using kubernetes plugin and then doing health check of the running application if it is 200 or not and then notifying whether the build is success or not.
+
+what is devops ?
+
+DevOps is a set of practices that combines software development (Dev) and IT operations (Ops) to improve collaboration, communication, and efficiency in delivering software products and services. It is a cultural and organizational shift that promotes collaboration, automation, and continuous improvement across development and operations teams.
+
+The main goal of DevOps is to break down the traditional barriers between development and operations and create a more seamless and streamlined software delivery process. It aims to bring developers, system administrators, quality assurance engineers, and other stakeholders together to work collaboratively throughout the entire software development lifecycle.
