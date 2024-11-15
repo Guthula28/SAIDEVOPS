@@ -1,1 +1,20 @@
 
+1.What is git ?
+git is a distributed version control system designed to track changes in files and coordinate work amoung multiple cordinators
+it is used to manage source code,track,project history facilitate coolloborations and enable branching and merging workflows.
+
+2.what is the differencr between git and git hub ?
+git is the version control system itself,while git hub is a hosting platform for git repositories.
+Git hub provides additional features such as colloboration tools,issue tracking,pull requests and integration with other services
+
+3.whaat is a repository in git ? 
+A repository or repo in git is a collection of files and directories along with the version history of those files,it represents a project and 
+serves as the central location for storing managing and sharing code.
+
+4.How do you create a new git repository ? 
+To create a new git repository navigate to the project directory and run the command gitint.
+This initializes a new git repository in the current directory creating a hidden .git folder to store version control metadate
+
+5.Explain the difference between git commit and Git push ? 
+A Git commit records changes to the repositoy files,creating a new snapshot or version of the project
+Git push on the other hand sends, committed changes from local repository to remote repository enabling and sharing of code with others.
