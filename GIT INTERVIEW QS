@@ -18,3 +18,16 @@ This initializes a new git repository in the current directory creating a hidden
 5.Explain the difference between git commit and Git push ? 
 A Git commit records changes to the repositoy files,creating a new snapshot or version of the project
 Git push on the other hand sends, committed changes from local repository to remote repository enabling and sharing of code with others.
+
+6.what is a Git branch and why it is used ?
+Git branch is light weight movable pointer to a commits in the repository version history, Branches are used to isolate work on new features,
+bug fixes or experiements with out affecting the main code branch
+
+7.How do you create and switch between git branches ? 
+To create a new branch git branch branchname 
+to switch branches git checkout branchname or git switch branchname
+Alternatively you can create and switch to a new branch using command git checkout -b branchname
+
+8.What is git merge and how does it work ?
+Git merge combines changes from one branch to another branch 
+
