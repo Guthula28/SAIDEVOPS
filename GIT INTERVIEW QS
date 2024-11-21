@@ -31,3 +31,27 @@ Alternatively you can create and switch to a new branch using command git checko
 8.What is git merge and how does it work ?
 Git merge combines changes from one branch to another branch 
 
+9. what is git tag and why it is used ?
+    git tag marks specific points in the repository's history. often used for version releases. for example git tag v1.0 tags the current commit as 
+      version 1.0
+
+10.How do you push a tag to a remote repository ?
+use git push origin <tagname>  to push a tag to the remote repository
+
+11. How do you delete a taag locally and remotely ?
+Git tag -d <tag name> deletes a local tag,
+git push origin --delete <tagname> deletes it from repository 
+
+12.Explain lightweight vs annotated tags ?
+lightweight tags are just pointers to a commit,while annotated tags stores additional metadate like a message,author, and date.
+
+13.How can you list all tags in a repository ?
+use git tag to list all tags
+
+14.How do you revert a commit ?
+git revert <commit-id> creates a new commit that undoes the changes of the specified commit, preserving history
+
+15.what is difference between git reset and git revert ? 
+git reset moves the HEAD pointer to a previous commit modifying history, while git revert creates a new commit to undo changes without 
+
+
