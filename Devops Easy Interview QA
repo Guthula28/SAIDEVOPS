@@ -1,1 +1,30 @@
+1.How to find top 5 CPU-Consuming process in real-time ?
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=%cpu | head -n 6
+the ps process status command is used to view information about active process.the options used here to help us sort and display process based on CPU consumptions
 
+-e display all process 
+-o pid,ppid,cmd,%mem,%cpu: specifies the columns to display
+pid - process id
+ppid - parent process ID
+cmd - command that started the process
+%mem - memory usage by processs
+%cpu - cpu usage by the process
+--sort=%cpu : sorts the output by CPU usage in descending order ( most cpu consuming process at the top)
+head -n 6 : limits the output to the top 5 process, including the header
+
+2. How to check disk usage of a specific directory ?
+  du -sh /path/to/directory
+  this command provides the size of a directory and its contents the options used here are 
+  -s summerizes the total disk usage of the directory and doesnt list the sizes of individuals files are subdirectories.
+  -h provides human readable output,displaying the size in kb,mb,gb
+
+3.How to find and delete files larger than 1GB
+  find /path/to/directory type -f -size +1G exec rm -i {} \;
+
+  the directory where you want to search for large files based on various criteria.here we use it to find files larger than 1gb and delete them 
+
+4.How to monitor real-time logs of a service ?
+  sudo journalctl -u service_name -f
+  the journal ctl command is used to query and view logs from the systemd journal the options used here are 
+  -u service name : specifies the service whose logs you want to monitor.Replace service_name with the name of the service (eg.nginx,apache,https
+  -f follows the logs in realtime, displaying new log entries as they are written similiar to tail -f 
