@@ -18,13 +18,39 @@ head -n 6 : limits the output to the top 5 process, including the header
   -s summerizes the total disk usage of the directory and doesnt list the sizes of individuals files are subdirectories.
   -h provides human readable output,displaying the size in kb,mb,gb
 
-3.How to find and delete files larger than 1GB
+3. How to find and delete files larger than 1GB
   find /path/to/directory type -f -size +1G exec rm -i {} \;
 
   the directory where you want to search for large files based on various criteria.here we use it to find files larger than 1gb and delete them 
 
-4.How to monitor real-time logs of a service ?
+4. How to monitor real-time logs of a service ?
   sudo journalctl -u service_name -f
+
   the journal ctl command is used to query and view logs from the systemd journal the options used here are 
   -u service name : specifies the service whose logs you want to monitor.Replace service_name with the name of the service (eg.nginx,apache,https
   -f follows the logs in realtime, displaying new log entries as they are written similiar to tail -f 
+  this command allows you to actively monitor the logs of a service ,which is crucial for debugging,trouble shoooting
+
+5. How to schedule a cron job to run a script daily at midnight ?
+  crontab -e 
+  the crontab command is used to edit the cron jobs for the current user. the -e optiobs opens the users crontab file for editing 
+  To schedule a script to run daily at mifnight you need to add a new cron job with the following syntax
+  0 0 * * * /path/to/script.sh
+  0 0 * * * this specifies the schedule 
+
+6. How to troubleshoot a service that is not running ?
+  sudo systemctl status nginx
+
+7.How to setup a password-less SSH login ?
+  Generate a SSH keypair on the local manchine : First generate a SSH keypair (public and private keys ) on the local machine. if you already have an ssh keypair.you can skip this step
+  ssh-keygen -t rsa -b 2048
+  -t rsa : specifies the type of key
+  -b 2048 : specifies the size of the key
+
+
+
+
+
+  
+
+
