@@ -92,6 +92,43 @@ head -n 6 : limits the output to the top 5 process, including the header
 
 19. How to get public ip of a server ?
     curl -s ifconfig.me
+20. How to delete empty files from a directory ?
+    find /path/to/directort/ -type f -empty -delete
+21. How to create a compressed zip file ?
+    zip -r archieve.zip /path/to/directory/
+22.How to extract a .tar.gz file ?
+    tar -xvzf archieve.tar.gz
+23. How to check the file type of a specific file ?
+    file file_name
+24. How to move all .log files to another directory ? 
+    mv *. log /path/to/destination
+25. How to create a symbolic link ? 
+    ln -s /original/file /path/to/link
+26  How to compare two files ? 
+    diff file1 file2
+27. How to count the number of lines in a file ? 
+    wc -l file_name
+28.How to create a new user ?
+    sudo adduser - m new_user
+29. How to set a passwd for a user ?
+    sudo passwd new_user
+30.  How to delete a user ?
+    sudo userdel -r user_name
+31. How to switch to another user ? 
+    su - user_name
+32  How to list all the users on the system ? 
+    cut -d: -f1 /etc/passwd
+33. How to lock a user account ? 
+    sudo usermod -L username
+34. How to unlock a user account ? 
+    sudo usermod -u username
+35. How to check the last login of a user ? 
+    last user_name
+36. How to list users currently logged in ?
+    who
+37. How to add user to a grouo ? 
+    sudo usermod -aG group_name 
+    
 
 
 
