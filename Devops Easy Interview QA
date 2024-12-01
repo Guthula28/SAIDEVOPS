@@ -47,6 +47,54 @@ head -n 6 : limits the output to the top 5 process, including the header
   -t rsa : specifies the type of key
   -b 2048 : specifies the size of the key
 
+8. How to find which process is using a specific port ?
+  sudo lsof -i :port_number
+  Explanation : 
+     isof : lists open files, including network connections
+    -i : portnumber:  specifies the port number to search for replace port_number with the actual port number you are interested in (eg.80 for HTTP,443 FOR HTTPS)  
+     sudo netstat -tuln | grep :port_number
+
+9.  how to compress and archive a directory ?
+    tar -czvf archive_name.tar.gz /path/to/directory
+    example : to compress and archieve a directory named my_folder into an archieve called my_folder.tar.gz:
+    tar -czvf my_folder.tar.gz my_folder
+
+10. How to view network statistics and active connections ?
+  netstat -tuln
+
+11. How to check the current kernel version ?
+   uname -r 
+
+12.How to check system uptime ? 
+  uptime
+
+13.How to display memory usage in a realtime ? 
+  free -h
+
+14. How to kill a process by its name ? 
+    pkill -f process_name
+
+15.How to change the hostname of the linux server ?
+  sudo hostnamectl set-hostname new-hostname
+  expl : The hostnamectl command is used to change the system hostname on modern linux distributions. this is a more reliable and permanenet method compared
+      to older methods like editing /etc/hostname directly
+  To set a histname to a web-server01
+  sudo hostnamectl set-hostname web-server-01
+
+16 How to find specific string in a file ? 
+  grep "search=string" /path/to/file
+
+17. How to list all active cron jobs ?
+  crontab -l
+
+18.Hiw to find the size of all files in a directory ?
+  du -ah /path/to/directory | sort -h 
+
+19. How to get public ip of a server ?
+    curl -s ifconfig.me
+
+
+
 
 
 
