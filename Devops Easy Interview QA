@@ -78,7 +78,7 @@ head -n 6 : limits the output to the top 5 process, including the header
   sudo hostnamectl set-hostname new-hostname
   expl : The hostnamectl command is used to change the system hostname on modern linux distributions. this is a more reliable and permanenet method compared
       to older methods like editing /etc/hostname directly
-  To set a histname to a web-server01
+  To set a hostname to a web-server01
   sudo hostnamectl set-hostname web-server-01
 
 16 How to find specific string in a file ? 
@@ -126,7 +126,7 @@ head -n 6 : limits the output to the top 5 process, including the header
     last user_name
 36. How to list users currently logged in ?
     who
-37. How to add user to a grouo ? 
+37. How to add user to a group ? 
     sudo usermod -aG group_name 
     
 
