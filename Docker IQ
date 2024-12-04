@@ -22,5 +22,13 @@ use case : Developers can package an application and its dependencies into a con
 5. How do you check running docker containers ?
     use docker ps for running containers and ps -a for all containers including stopped containers 
 
-6.
+6.What is the purpose of docker-compose ?
+  it simplifies multi-container application deployment using a YAML file
+   example: 
+        Version: "3"
+         services :
+            web:        
+               image: nginx
+               ports:
+                  -"8080:80"
 
