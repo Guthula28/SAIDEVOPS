@@ -20,7 +20,7 @@ use case : Developers can package an application and its dependencies into a con
    docker start and existing stopped container
 
 5. How do you check running docker containers ?
-  use docker ps 
+    use docker ps for running containers and ps -a for all containers including stopped containers 
 
 6.
 
