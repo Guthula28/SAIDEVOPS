@@ -1,0 +1,72 @@
+First create vi tomcat.sh file and paste the below script in it and execute it 
+
+This is for ubuntu AMI instance 
+
+#!/bin/bash
+
+# STEP 1: Install Java 11
+sudo apt update
+sudo apt install openjdk-11-jdk -y
+
+# STEP 2: Download & Extract Tomcat 9.0.107
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.107/bin/apache-tomcat-9.0.107.tar.gz
+tar -zxvf apache-tomcat-9.0.107.tar.gz
+cd apache-tomcat-9.0.107
+
+# STEP 3: Configure User Roles
+sed -i '56 a\<role rolename="manager-gui"/>' conf/tomcat-users.xml
+sed -i '57 a\<role rolename="manager-script"/>' conf/tomcat-users.xml
+sed -i '58 a\<user username="tomcat" password="raham123" roles="manager-gui, manager-script"/>' conf/tomcat-users.xml
+sed -i '59 a\</tomcat-users>' conf/tomcat-users.xml
+sed -i '56d' conf/tomcat-users.xml
+
+# STEP 4: Allow Remote Manager Access
+sed -i '21d' webapps/manager/META-INF/context.xml
+sed -i '22d' webapps/manager/META-INF/context.xml
+
+# STEP 5: Start Tomcat
+sh bin/startup.sh
+
+
+after this we need to execute this commands 
+
+cd apache-tomcat-9.0.107/bin
+chmod +x startup.sh shutdown.sh catalina.sh
+./startup.sh
+ps aux | grep tomcat
+./shutdown.sh
+readlink -f $(which java)
+sudo nano /etc/systemd/system/tomcat.service
+Add below script in it 
+
+[Unit]
+Description=Apache Tomcat Web Application Server
+After=network.target
+
+[Service]
+Type=forking
+
+Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
+Environment="CATALINA_HOME=/home/ubuntu/apache-tomcat-9.0.107"
+Environment="CATALINA_BASE=/home/ubuntu/apache-tomcat-9.0.107"
+Environment="TOMCAT_USER=ubuntu" # Or 'tomcat' if you create a dedicated user
+
+ExecStart=/home/ubuntu/apache-tomcat-9.0.107/bin/startup.sh
+ExecStop=/home/ubuntu/apache-tomcat-9.0.107/bin/shutdown.sh
+
+User=ubuntu
+Group=ubuntu
+# Or 'tomcat' for both User and Group if you create a dedicated tomcat user/group
+# UMask=0007 # Uncomment if you want to set specific file permissions
+
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl daemon-reload
+sudo systemctl start tomcat
+sudo systemctl status tomcat
+sudo systemctl enable tomcat
